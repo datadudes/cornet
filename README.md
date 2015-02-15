@@ -1,15 +1,44 @@
 Sisyphus
 =====
 
-This is a WIP.
+*This is a WIP.*
+
+Command-line tool to generate [Apache Sqoop v1](http://sqoop.apache.org/)
+commands to ingest data from RDBMS databases to Hive.
 
 
-### Postgresql
+# Installation
 
-In order to use PostgreSQL connector, make sure the `libpq` headers are installed:
+Sisyphus currently supports Postgres and MySQL.
+
+#### Install Sisyphus with a Postgres connector
+
+First, install Postgres dev-headers:
 
 - Ubuntu/Debian: `apt-get install libpq-dev`
-- CentOs: `yum install postgresql-libs`
+- RedHat/CentOs: `yum install postgresql-libs`
 - Mac: should be installed by default
+
+Then, install Sisyphus with:
+
+```pip install sisyphus[postgres]```
+
+#### Install Sisyphus with a MySQL connector
+
+First, install MySQL dev-headers:
+
+- Ubuntu/Debian: `apt-get install python-dev libmysqlclient-dev`
+- RedHat/CentOs: `yum install python-devel mysql-devel`
+
+Then, install Sisyphus with:
+
+```pip install sisyphus[mysql]```
+
+#### Install Sisyphus with both Mysql and Postgres connectors
+
+First, install Postgres and MySQL dev-headers. Then:
+
+```pip install sisyphus[postgres,mysql]```
+
 
 

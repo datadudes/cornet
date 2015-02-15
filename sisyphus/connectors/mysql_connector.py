@@ -1,4 +1,4 @@
-import mysql.connector
+import MySQLdb
 from base_connector import BaseConnector
 
 
@@ -8,7 +8,7 @@ class MySqlConnector(BaseConnector):
 
     def _get_db_conn(self):
         source = self.source
-        return mysql.connector.connect(
+        return MySQLdb.connect(
             host=source['host'], port=source['port'],
             user=source['user'], passwd=source['password'],
             db=source['db'])

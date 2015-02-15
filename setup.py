@@ -15,5 +15,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={'console_scripts': ['sisyphus=sisyphus.main:cli']},
+    extras_require={
+        'mysql': ["mysqlclient==1.3.5"],
+        'postgres': ["psycopg2==2.6"],
+    },
     install_requires=requirements
 )
