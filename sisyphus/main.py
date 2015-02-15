@@ -45,11 +45,7 @@ def print_sqoop_cmds(task_config):
 
 @click.command()
 @click.argument('config_file', type=click.Path(exists=True))
-def main(config_file):
+def cli(config_file):
     conf = get_conf(config_file)
     for task_name, task_config in conf.iteritems():
         print_sqoop_cmds(task_config)
-
-
-if __name__ == '__main__':
-    main()
