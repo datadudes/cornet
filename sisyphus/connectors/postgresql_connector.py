@@ -1,5 +1,5 @@
 import psycopg2
-from BaseConnector import BaseConnector
+from base_connector import BaseConnector
 
 
 class PostgreSqlConnector(BaseConnector):

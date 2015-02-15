@@ -1,5 +1,5 @@
 import mysql.connector
-from BaseConnector import BaseConnector
+from base_connector import BaseConnector
 
 
 class MySqlConnector(BaseConnector):
