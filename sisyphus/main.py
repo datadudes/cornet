@@ -1,7 +1,9 @@
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
-from connectors import MySQLConnector
+import click
+from connectors import get_connector
+
 
 def get_conf(filename):
     env = Environment(loader=FileSystemLoader('.'))
@@ -10,7 +12,7 @@ def get_conf(filename):
     return yaml.safe_load(yaml_str)
 
 
-def get_sqoop_cmd(task_config, table, schema, jdbc_url_prefix):
+def get_sqoop_cmd(task_config, table, jdbc_url_prefix):
     source = task_config['source']
     hive = task_config['hive']
     table_name = table[0]
@@ -30,18 +32,24 @@ def get_sqoop_cmd(task_config, table, schema, jdbc_url_prefix):
             hive_table)
 
 
-conf = get_conf('ingest-conf.jinja')
-print(conf)
-
-for task_name, task_config in conf.iteritems():
+def print_sqoop_cmds(task_config):
     source = task_config['source']
-    with MySQLConnector(source) as conn:
+    with get_connector(source) as conn:
         tables_all = conn.get_tables()
         to_skip = source.get('skip_tables', [])
         to_import = [t for t in tables_all if t[0] not in to_skip]
         for table in sorted(to_import):
-            schema = conn.get_table_schema(table[0])
-            prefix = conn.jdbc_url_prefix()
-            print get_sqoop_cmd(task_config, table, schema, prefix)
+            cmd = get_sqoop_cmd(task_config, table, conn.jdbc_url_prefix)
+            print cmd
 
 
+@click.command()
+@click.argument('config_file', type=click.Path(exists=True))
+def main(config_file):
+    conf = get_conf(config_file)
+    for task_name, task_config in conf.iteritems():
+        print_sqoop_cmds(task_config)
+
+
+if __name__ == '__main__':
+    main()
