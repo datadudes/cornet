@@ -17,7 +17,7 @@ First, install Postgres dev-headers:
 
 - Ubuntu/Debian: `apt-get install libpq-dev`
 - RedHat/CentOs: `yum install postgresql-libs`
-- Mac: should be installed by default
+- Mac (for dev purposes): should be installed by default
 
 Then, install Sisyphus with:
 
@@ -29,6 +29,7 @@ First, install MySQL dev-headers:
 
 - Ubuntu/Debian: `apt-get install python-dev libmysqlclient-dev`
 - RedHat/CentOs: `yum install python-devel mysql-devel`
+- Mac (for dev purposes): `brew install mysql`
 
 Then, install Sisyphus with:
 
