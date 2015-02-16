@@ -21,5 +21,9 @@ class PostgreSqlConnector(BaseConnector):
         """)
 
     def get_columns(self, table):
-        return self.query("describe `{0}`")
-
+        sql = """
+            select column_name, udt_name
+            from information_schema.columns
+            where table_name = '{0}'
+            and table_catalog = '{1}'; """
+        return self.query(sql.format(table, self.source['db']))

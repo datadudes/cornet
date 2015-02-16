@@ -17,5 +17,10 @@ class MySqlConnector(BaseConnector):
         return self.query("show full tables")
 
     def get_columns(self, table):
-        return self.query("describe `{0}`")
+        sql = """
+            select column_name, data_type
+            from information_schema.columns
+            where table_schema = '{0}'
+            and table_name = '{1}' """
+        return self.query(sql.format(self.source['db'], table))
 
