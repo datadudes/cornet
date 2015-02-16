@@ -12,7 +12,7 @@ def get_conf(filename):
     return yaml.safe_load(yaml_str)
 
 
-def get_sqoop_cmd(task_config, table_name, jdbc_url_prefix, columns):
+def get_sqoop_cmd(task_config, table_name, jdbc_url_prefix, columns, other_params):
     source = task_config['source']
     hive = task_config['hive']
 
@@ -20,15 +20,14 @@ def get_sqoop_cmd(task_config, table_name, jdbc_url_prefix, columns):
         source['host'], source['port'], source['db'])
 
     map_column_hive = get_type_mappings(hive.get('type_mapping', {}), columns)
-    hive_table = '{0}{1}'.format(hive['prefix'], table_name)
+    hive_table = '{0}.{1}{2}'.format(hive['db'], hive['prefix'], table_name)
 
     template = """sqoop import
         --connect {0} --username {1} --password '{2}'
         --table {3}
         --hive-import --hive-overwrite --direct
         --hive-table {4}
-        {5}
-        """.replace('\n', ' \\\n')
+        {5} {6} """.replace('\n', ' \\\n')
 
     return template.format(
         jdbc_url,
@@ -36,7 +35,8 @@ def get_sqoop_cmd(task_config, table_name, jdbc_url_prefix, columns):
         source['password'],
         table_name,
         hive_table,
-        map_column_hive)
+        map_column_hive,
+        other_params)
 
 
 def get_type_mappings(type_mappings, columns):
@@ -51,7 +51,7 @@ def get_type_mappings(type_mappings, columns):
         return ''
 
 
-def print_sqoop_cmds(task_config):
+def print_sqoop_cmds(task_config, other_params):
     source = task_config['source']
     with get_connector(source) as conn:
         tables_all = conn.get_tables()
@@ -60,8 +60,9 @@ def print_sqoop_cmds(task_config):
         for table_name in sorted(to_import):
             columns = conn.get_columns(table_name)
             cmd = get_sqoop_cmd(task_config, table_name,
-                conn.jdbc_url_prefix, columns)
+                conn.jdbc_url_prefix, columns, other_params)
             print cmd
+            print
 
 
 def print_schema(task_name, source):
@@ -80,7 +81,8 @@ def print_schema(task_name, source):
 def cli(config_file, print_schema_only):
     conf = get_conf(config_file)
     for task_name, task_config in conf.iteritems():
-        if print_schema_only:
-            print_schema(task_name, task_config['source'])
-        else:
-            print_sqoop_cmds(task_config)
+        if 'source' in task_config:
+            if print_schema_only:
+                print_schema(task_name, task_config['source'])
+            else:
+                print_sqoop_cmds(task_config, conf['other_parameters'])
