@@ -1,75 +1,70 @@
 
-import yaml
-from jinja2 import Environment, FileSystemLoader
 import click
 from connectors import get_connector
+from config import TaskConfig
 
 
-def get_conf(filename):
-    env = Environment(loader=FileSystemLoader('.'))
-    template = env.get_template(filename)
-    yaml_str = template.render()
-    return yaml.safe_load(yaml_str)
+def get_sqoop_args(task, table, jdbc_url_prefix, columns):
+    basic_args = {
+        'connect': jdbc_url(task, jdbc_url_prefix),
+        'username': task.source['user'],
+        'password': task.source['password'],
+        'table': table,
+        'hive-import': True,
+        'hive-overwrite': True,
+        'map-column-hive': get_type_mappings(task, columns),
+        'direct': True,
+        'hive-table': hive_table(task, table)
+    }
+    custom_args = task.sqoop_args(table)
+    return TaskConfig._merge(custom_args, basic_args)
 
 
-def get_sqoop_cmd(task_config, table_name, jdbc_url_prefix, columns, other_params):
-    source = task_config['source']
-    hive = task_config['hive']
-
-    jdbc_url = '{0}://{1}:{2}/{3}'.format(jdbc_url_prefix,
-        source['host'], source['port'], source['db'])
-
-    map_column_hive = get_type_mappings(hive.get('type_mapping', {}), columns)
-    hive_table = '{0}.{1}{2}'.format(hive['db'], hive['prefix'], table_name)
-
-    template = """sqoop import
-        --connect {0} --username {1} --password '{2}'
-        --table {3}
-        --hive-import --hive-overwrite --direct
-        --hive-table {4}
-        {5} {6} """.replace('\n', ' \\\n')
-
-    return template.format(
-        jdbc_url,
-        source['user'],
-        source['password'],
-        table_name,
-        hive_table,
-        map_column_hive,
-        other_params)
+def jdbc_url(task, jdbc_url_prefix):
+    return '{0}://{1}:{2}/{3}'.format(
+        jdbc_url_prefix, task.source['host'],
+        task.source['port'], task.source['db'])
 
 
-def get_type_mappings(type_mappings, columns):
+def hive_table(task, table):
+    return '{0}.{1}{2}'.format(task.hive['db'], task.hive['table_prefix'], table)
+
+
+def sqoop_arg_to_str(k, v):
+    prefix = '-' if len(k) == 1 else '--'
+    value = '' if isinstance(v, bool) else v
+    return '{0}{1} {2}'.format(prefix, k, value).strip()
+
+def sqoop_args_to_cmd(args):
+    cmd_args = {sqoop_arg_to_str(k, v) for k, v in args.iteritems() if v}
+    return ' \\\n   '.join(['sqoop import'] + sorted(cmd_args)) + '\n'
+
+
+def get_type_mappings(task, columns):
+    type_mapping = task.hive.get('map-types', {})
     mapped_columns = [
-        "{0}={1}".format(c_name, type_mappings[c_type.upper()])
+        "{0}={1}".format(c_name, type_mapping[c_type.upper()])
         for c_name, c_type in columns
-        if c_type.upper() in type_mappings]
-
-    if mapped_columns:
-        return '--map-column-hive ' + ','.join(mapped_columns)
-    else:
-        return ''
+        if c_type.upper() in type_mapping]
+    return ','.join(mapped_columns) if mapped_columns else False
 
 
-def print_sqoop_cmds(task_config, other_params):
-    source = task_config['source']
-    with get_connector(source) as conn:
+def print_sqoop_cmds(task):
+    with get_connector(task.source) as conn:
         tables_all = conn.get_tables()
-        to_skip = source.get('skip_tables', [])
+        to_skip = task.source.get('skip_tables', [])
         to_import = [t[0] for t in tables_all if t[0] not in to_skip]
-        for table_name in sorted(to_import):
-            columns = conn.get_columns(table_name)
-            cmd = get_sqoop_cmd(task_config, table_name,
-                conn.jdbc_url_prefix, columns, other_params)
-            print cmd
-            print
+        for table in sorted(to_import):
+            columns = conn.get_columns(table)
+            args = get_sqoop_args(task, table, conn.jdbc_url_prefix, columns)
+            print sqoop_args_to_cmd(args)
 
 
-def print_schema(task_name, source):
-    with get_connector(source) as conn:
+def print_schema(task):
+    with get_connector(task.source) as conn:
         tables_all = conn.get_tables()
         for table in tables_all:
-            print '\n=== {0}.{1} ==='.format(task_name, table[0])
+            print '\n=== {0}.{1} ==='.format(task.source['db'], table[0])
             columns = conn.get_columns(table[0])
             for c in columns:
                 print '{0}: {1}'.format(c[0], c[1].upper())
@@ -79,10 +74,8 @@ def print_schema(task_name, source):
 @click.argument('config_file', type=click.Path(exists=True))
 @click.option('--print-schema-only', is_flag=True)
 def cli(config_file, print_schema_only):
-    conf = get_conf(config_file)
-    for task_name, task_config in conf.iteritems():
-        if 'source' in task_config:
-            if print_schema_only:
-                print_schema(task_name, task_config['source'])
-            else:
-                print_sqoop_cmds(task_config, conf['other_parameters'])
+    for task in TaskConfig.load(config_file):
+        if print_schema_only:
+            print_schema(task)
+        else:
+            print_sqoop_cmds(task)
