@@ -5,11 +5,21 @@ import copy
 
 class TaskConfig():
 
+    DEFAULT = {
+        'source': {},
+        'skip_tables': [],
+        'hive': {
+            'db': '',
+            'table_prefix': ''
+        }
+    }
+
     def __init__(self, task_config, global_config):
 
-        merged = TaskConfig._merge(
+        merged = TaskConfig._merge(TaskConfig._merge(
             TaskConfig._without_key(task_config, 'sqoop_args'),
-            TaskConfig._without_key(global_config, 'sqoop_args'))
+            TaskConfig._without_key(global_config, 'sqoop_args')),
+            TaskConfig.DEFAULT)
 
         for key in ['source', 'hive', 'skip_tables']:
             setattr(self, key, merged[key])

@@ -11,9 +11,7 @@ def get_sqoop_args(task, table, jdbc_url_prefix, columns):
         'password': task.source['password'],
         'table': table,
         'hive-import': True,
-        'hive-overwrite': True,
         'map-column-hive': get_type_mappings(task, columns),
-        'direct': True,
         'hive-table': hive_table(task, table)
     }
     custom_args = task.sqoop_args(table)
@@ -35,6 +33,7 @@ def sqoop_arg_to_str(k, v):
     value = '' if isinstance(v, bool) else v
     return '{0}{1} {2}'.format(prefix, k, value).strip()
 
+
 def sqoop_args_to_cmd(args):
     cmd_args = {sqoop_arg_to_str(k, v) for k, v in args.iteritems() if v}
     return ' \\\n   '.join(['sqoop import'] + sorted(cmd_args)) + '\n'
@@ -42,18 +41,16 @@ def sqoop_args_to_cmd(args):
 
 def get_type_mappings(task, columns):
     type_mapping = task.hive.get('map-types', {})
-    mapped_columns = [
-        "{0}={1}".format(c_name, type_mapping[c_type.upper()])
-        for c_name, c_type in columns
-        if c_type.upper() in type_mapping]
+    mapped_columns = ["{0}={1}".format(c.name, type_mapping[c.type])
+        for c in columns if c.type in type_mapping]
     return ','.join(mapped_columns) if mapped_columns else False
 
 
 def print_sqoop_cmds(task):
     with get_connector(task.source) as conn:
         tables_all = conn.get_tables()
-        to_skip = task.source.get('skip_tables', [])
-        to_import = [t[0] for t in tables_all if t[0] not in to_skip]
+        to_skip = task.skip_tables
+        to_import = [t.name for t in tables_all if t.name not in to_skip]
         for table in sorted(to_import):
             columns = conn.get_columns(table)
             args = get_sqoop_args(task, table, conn.jdbc_url_prefix, columns)
