@@ -4,7 +4,7 @@ from base_connector import BaseConnector
 
 class PostgreSqlConnector(BaseConnector):
 
-    jdbc_url_prefix = 'jdbc:postgres'
+    jdbc_url_prefix = 'jdbc:postgresql'
 
     def _get_db_conn(self):
         source = self.source
