@@ -1,60 +1,18 @@
 
 import click
 from connectors import get_connector
-from config import TaskConfig
-
-
-def get_sqoop_args(task, table, jdbc_url_prefix, columns):
-    basic_args = {
-        'connect': jdbc_url(task, jdbc_url_prefix),
-        'username': task.source['user'],
-        'password': task.source['password'],
-        'table': table,
-        'hive-import': True,
-        'map-column-hive': get_type_mappings(task, columns),
-        'hive-table': hive_table(task, table)
-    }
-    custom_args = task.sqoop_args(table)
-    return TaskConfig._merge(custom_args, basic_args)
-
-
-def jdbc_url(task, jdbc_url_prefix):
-    return '{0}://{1}:{2}/{3}'.format(
-        jdbc_url_prefix, task.source['host'],
-        task.source['port'], task.source['db'])
-
-
-def hive_table(task, table):
-    return '{0}.{1}{2}'.format(task.hive['db'], task.hive['table_prefix'], table)
-
-
-def sqoop_arg_to_str(k, v):
-    prefix = '-' if len(k) == 1 else '--'
-    value = '' if isinstance(v, bool) else v
-    return '{0}{1} {2}'.format(prefix, k, value).strip()
-
-
-def sqoop_args_to_cmd(args):
-    cmd_args = {sqoop_arg_to_str(k, v) for k, v in args.iteritems() if v}
-    return ' \\\n   '.join(['sqoop import'] + sorted(cmd_args)) + '\n'
-
-
-def get_type_mappings(task, columns):
-    type_mapping = task.hive.get('map-types', {})
-    mapped_columns = ["{0}={1}".format(c.name, type_mapping[c.type])
-        for c in columns if c.type in type_mapping]
-    return ','.join(mapped_columns) if mapped_columns else False
+from task_config import TaskConfig
+from sqoop_cmd import SqoopCmd
 
 
 def print_sqoop_cmds(task):
     with get_connector(task.source) as conn:
-        tables_all = conn.get_tables()
-        to_skip = task.skip_tables
-        to_import = [t.name for t in tables_all if t.name not in to_skip]
-        for table in sorted(to_import):
+        all_tables = conn.get_tables()
+        to_import = [t for t in all_tables if t.name not in task.skip_tables]
+        for table in sorted(to_import, key=lambda tbl: tbl.name):
             columns = conn.get_columns(table)
-            args = get_sqoop_args(task, table, conn.jdbc_url_prefix, columns)
-            print sqoop_args_to_cmd(args)
+            cmd = SqoopCmd(task, table, columns)
+            print cmd.as_string()
 
 
 def print_schema(task):
@@ -62,9 +20,9 @@ def print_schema(task):
         tables_all = conn.get_tables()
         for table in tables_all:
             print '\n=== {0}.{1} ==='.format(task.source['db'], table[0])
-            columns = conn.get_columns(table[0])
+            columns = conn.get_columns(table)
             for c in columns:
-                print '{0}: {1}'.format(c[0], c[1].upper())
+                print '{0}: {1}'.format(c.name, c.type)
 
 
 @click.command()

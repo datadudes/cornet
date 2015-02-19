@@ -1,0 +1,48 @@
+
+{% set host = 'my.example.com'%}
+
+global:
+  source:
+    host: {{ host }}
+  hive:
+    db: sqoop_test
+  map_types:
+    java:
+      UUID: String
+    hive:
+      VARBINARY: String
+      LONGBLOB: String
+      UUID: String
+  sqoop_args:
+    m: 2
+    direct: true
+    data-warehouse: /user/sqoop
+  skip_tables:
+    - schema_version
+
+tasks:
+
+  - source:
+      db: db1
+      port: 1111
+      user: marcel
+      password: datadude1
+      driver: mysql
+    hive:
+      table_prefix: a_
+    skip_tables:
+      - log
+      - notification
+    sqoop_args:
+      user:
+        m: 1
+        direct: false
+
+  - source:
+      db: db2
+      port: 2222
+      user: daan
+      password: datadude2
+      driver: postgresql
+    hive:
+      table_prefix: b_

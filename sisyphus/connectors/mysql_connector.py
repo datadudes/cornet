@@ -1,5 +1,6 @@
 import MySQLdb
-from base_connector import BaseConnector, Column, Table
+from base_connector import BaseConnector
+from sisyphus.connectors import Table, Column
 
 
 class MySqlConnector(BaseConnector):
@@ -14,7 +15,8 @@ class MySqlConnector(BaseConnector):
             db=source['db'])
 
     def get_tables(self):
-        return map(Table._make, self.query("show full tables"))
+        res = self.query("show full tables")
+        return map(Table._make, res)
 
     def get_columns(self, table):
         sql = """
@@ -22,5 +24,6 @@ class MySqlConnector(BaseConnector):
             from information_schema.columns
             where table_schema = '{0}'
             and table_name = '{1}' """
-        return map(Column._make, self.query(sql.format(self.source['db'], table)))
+        res = self.query(sql.format(self.source['db'], table.name))
+        return map(Column._make, res)
 

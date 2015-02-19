@@ -1,8 +1,4 @@
 from contextlib import closing
-from collections import namedtuple
-
-Column = namedtuple('Column', ['name', 'type'])
-Table = namedtuple('Table', ['name', 'type'])
 
 
 class BaseConnector:

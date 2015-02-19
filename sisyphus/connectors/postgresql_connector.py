@@ -1,5 +1,6 @@
 import psycopg2
-from base_connector import BaseConnector, Column, Table
+from base_connector import BaseConnector
+from sisyphus.connectors import Table, Column
 
 
 class PostgreSqlConnector(BaseConnector):
@@ -14,16 +15,18 @@ class PostgreSqlConnector(BaseConnector):
             database=source['db'])
 
     def get_tables(self):
-        return map(Table._make, self.query("""
+        sql = """
             select table_name, table_type
             from information_schema.tables
-            where table_schema NOT IN ('pg_catalog', 'information_schema');
-        """))
+            where table_schema NOT IN ('pg_catalog', 'information_schema'); """
+        res = self.query(sql)
+        return map(Table._make, res)
 
     def get_columns(self, table):
         sql = """
             select column_name, upper(udt_name)
             from information_schema.columns
-            where table_name = '{0}'
-            and table_catalog = '{1}'; """
-        return map(Column._make, self.query(sql.format(self.source['db'], table)))
+            where table_catalog = '{0}'
+            and table_name = '{1}'; """
+        res = self.query(sql.format(self.source['db'], table.name))
+        return map(Column._make, res)
