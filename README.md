@@ -1,7 +1,6 @@
-[![Build Status](https://travis-ci.org/datadudes/cornet.svg?branch=master)](https://travis-ci.org/datadudes/cornet)
-
-Cornet
+Cornet [![Build Status](https://travis-ci.org/datadudes/cornet.svg?branch=master)](https://travis-ci.org/datadudes/cornet) [![Coverage Status](https://coveralls.io/repos/datadudes/cornet/badge.svg?branch=master)](https://coveralls.io/r/datadudes/cornet?branch=master)
 =====
+
 
 *This is a WIP.*
 
