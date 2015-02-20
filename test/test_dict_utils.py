@@ -1,5 +1,5 @@
 
-from sisyphus.dict_utils import merge_dict, dict_without_key
+from cornet.dict_utils import merge_dict, dict_without_key
 
 
 def test_merge_dict_with_empty():

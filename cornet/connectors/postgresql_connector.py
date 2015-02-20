@@ -1,6 +1,6 @@
 import psycopg2
 from base_connector import BaseConnector
-from sisyphus.connectors import Table, Column
+from cornet.connectors import Table, Column
 
 
 class PostgreSqlConnector(BaseConnector):

@@ -1,5 +1,5 @@
-from sisyphus.task_config import TaskConfig
-from sisyphus.connectors import Table
+from cornet.task_config import TaskConfig
+from cornet.connectors import Table
 
 def test_yaml_load():
     tasks = [t for t in TaskConfig.load('test/configs/sample.yaml')]

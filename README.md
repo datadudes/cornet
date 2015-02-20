@@ -1,4 +1,4 @@
-Sisyphus
+Cornet
 =====
 
 *This is a WIP.*
@@ -9,9 +9,9 @@ commands to ingest data from RDBMS databases to Hive.
 
 # Installation
 
-Sisyphus currently supports Postgres and MySQL.
+Cornet currently supports Postgres and MySQL.
 
-#### Install Sisyphus with a Postgres connector
+#### Install Cornet with a Postgres connector
 
 First, install Postgres dev-headers:
 
@@ -19,11 +19,11 @@ First, install Postgres dev-headers:
 - RedHat/CentOs: `yum install postgresql-libs`
 - Mac (for dev purposes): should be installed by default
 
-Then, install Sisyphus with:
+Then, install Cornet with:
 
-```pip install sisyphus[postgres]```
+```pip install cornet[postgres]```
 
-#### Install Sisyphus with a MySQL connector
+#### Install Cornet with a MySQL connector
 
 First, install MySQL dev-headers:
 
@@ -31,15 +31,15 @@ First, install MySQL dev-headers:
 - RedHat/CentOs: `yum install python-devel mysql-devel`
 - Mac (for dev purposes): `brew install mysql`
 
-Then, install Sisyphus with:
+Then, install Cornet with:
 
-```pip install sisyphus[mysql]```
+```pip install cornet[mysql]```
 
-#### Install Sisyphus with both Mysql and Postgres connectors
+#### Install Cornet with both Mysql and Postgres connectors
 
 First, install Postgres and MySQL dev-headers. Then:
 
-```pip install sisyphus[postgres,mysql]```
+```pip install cornet[postgres,mysql]```
 
 
 
