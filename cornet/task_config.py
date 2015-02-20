@@ -30,7 +30,6 @@ class TaskConfig():
             self._config.get('sqoop_args', {}).get(table.name, {}),
             self._global_config.get('sqoop_args', {}))
 
-
     @staticmethod
     def load(filename):
         env = Environment(loader=FileSystemLoader('.'))
@@ -40,4 +39,3 @@ class TaskConfig():
         global_conf = conf['global']
         for task_config in conf['tasks']:
             yield TaskConfig(task_config, global_conf)
-

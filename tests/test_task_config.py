@@ -1,8 +1,9 @@
 from cornet.task_config import TaskConfig
 from cornet.connectors import Table
 
+
 def test_yaml_load():
-    tasks = [t for t in TaskConfig.load('test/configs/sample.yaml')]
+    tasks = [t for t in TaskConfig.load('tests/configs/sample.yaml')]
     assert len(tasks) == 2
     assert tasks[0].source == {
         'driver': 'mysql',
@@ -16,7 +17,11 @@ def test_yaml_load():
         'db': 'sqoop_test',
         'table_prefix': 'a_'
     }
-    assert set(tasks[0].skip_tables) == {'schema_version', 'log', 'notification'}
+    assert set(tasks[0].skip_tables) == {
+        'schema_version',
+        'log',
+        'notification'
+    }
     assert tasks[0].sqoop_args(Table('some_table', 'table')) == {
         'm': 2,
         'direct': True,

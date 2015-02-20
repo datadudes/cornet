@@ -42,7 +42,6 @@ class SqoopCmd:
         custom_args = self.task.sqoop_args(self.table)
         return merge_dict(custom_args, basic_args)
 
-
     @staticmethod
     def _arg2str(k, v):
         prefix = '-' if len(k) == 1 else '--'
@@ -56,4 +55,3 @@ class SqoopCmd:
             if v}
         name = 'sqoop import'
         return ' \\\n   '.join([name] + sorted(args)) + '\n'
-

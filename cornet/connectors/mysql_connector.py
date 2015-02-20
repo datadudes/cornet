@@ -26,4 +26,3 @@ class MySqlConnector(BaseConnector):
             and table_name = '{1}' """
         res = self.query(sql.format(self.source['db'], table.name))
         return map(Column._make, res)
-

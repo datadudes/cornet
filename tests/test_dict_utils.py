@@ -40,4 +40,3 @@ def test_without_key():
     assert dict_without_key(d, 1) == {4: 5}
     assert d == {1: {2: 3}, 4: 5}
     assert dict_without_key({1: 2}, 2) == {1: 2}
-

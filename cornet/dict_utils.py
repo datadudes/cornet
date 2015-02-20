@@ -31,4 +31,3 @@ def dict_without_key(dict, key):
     if key in d:
         del d[key]
     return d
-

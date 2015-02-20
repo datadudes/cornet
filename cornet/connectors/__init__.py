@@ -14,4 +14,3 @@ def get_connector(source):
         return PostgreSqlConnector(source)
     else:
         raise LookupError("Driver {0} not supported".format(driver))
-
