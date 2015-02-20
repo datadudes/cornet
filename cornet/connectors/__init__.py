@@ -15,6 +15,3 @@ def get_connector(source):
     else:
         raise LookupError("Driver {0} not supported".format(driver))
 
-
-def get_jdbc_url_prefix(source):
-    return get_connector(source).jdbc_url_prefix

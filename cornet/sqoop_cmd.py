@@ -1,5 +1,4 @@
 from dict_utils import merge_dict
-from connectors import get_jdbc_url_prefix
 
 
 class SqoopCmd:
@@ -10,8 +9,8 @@ class SqoopCmd:
         self.columns = columns
 
     def _arg_jdbc_url(self):
-        return '{0}://{1}:{2}/{3}'.format(
-            get_jdbc_url_prefix(self.task.source),
+        return 'jdbc:{0}://{1}:{2}/{3}'.format(
+            self.task.source['driver'],
             self.task.source['host'],
             self.task.source['port'],
             self.task.source['db'])
