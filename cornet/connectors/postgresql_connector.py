@@ -10,8 +10,10 @@ class PostgreSqlConnector(BaseConnector):
     def _get_db_conn(self):
         source = self.source
         return psycopg2.connect(
-            host=source['host'], port=source['port'],
-            user=source['user'], password=source['password'],
+            host=source['host'],
+            port=source['port'],
+            user=source['user'],
+            password=self._get_password(),
             database=source['db'])
 
     def get_tables(self):

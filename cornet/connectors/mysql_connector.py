@@ -10,8 +10,10 @@ class MySqlConnector(BaseConnector):
     def _get_db_conn(self):
         source = self.source
         return MySQLdb.connect(
-            host=source['host'], port=source['port'],
-            user=source['user'], passwd=source['password'],
+            host=source['host'],
+            port=source['port'],
+            user=source['user'],
+            passwd=self._get_password(),
             db=source['db'])
 
     def get_tables(self):

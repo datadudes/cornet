@@ -13,6 +13,14 @@ def test_yaml_load():
         'user': 'marcel',
         'password': 'datadude1'
     }
+    assert tasks[1].source == {
+        'driver': 'postgresql',
+        'host': 'my.example.com',
+        'port': 2222,
+        'db': 'db2',
+        'user': 'daan',
+        'password_file': '/home/daan/.password'
+    }
     assert tasks[0].hive == {
         'db': 'sqoop_test',
         'table_prefix': 'a_'

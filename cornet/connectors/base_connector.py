@@ -20,3 +20,10 @@ class BaseConnector:
         with closing(self.db_conn.cursor()) as cursor:
             cursor.execute(q)
             return cursor.fetchall()
+
+    def _get_password(self):
+        if 'password' in self.source:
+            return self.source['password']
+        else:
+            with open(self.source['password_file'], 'r') as f:
+                return f.readline().strip()

@@ -42,7 +42,7 @@ tasks:
       db: db2
       port: 2222
       user: daan
-      password: datadude2
+      password_file: /home/daan/.password
       driver: postgresql
     hive:
       table_prefix: b_

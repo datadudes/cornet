@@ -32,13 +32,18 @@ class SqoopCmd:
         basic_args = {
             'connect': self._arg_jdbc_url(),
             'username': self.task.source['user'],
-            'password': self.task.source['password'],
             'table': self.table.name,
             'hive-import': True,
             'map-column-hive': self._arg_column_map('hive'),
             'map-column-java': self._arg_column_map('java'),
             'hive-table': self._arg_hive_tablename()
         }
+
+        if 'password' in self.task.source:
+            basic_args['password'] = self.task.source['password']
+        else:
+            basic_args['password-file'] = self.task.source['password_file']
+
         custom_args = self.task.sqoop_args(self.table)
         return merge_dict(custom_args, basic_args)
 
