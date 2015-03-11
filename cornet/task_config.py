@@ -1,6 +1,7 @@
 import yaml
 from jinja2 import Environment, FileSystemLoader
 from dict_utils import merge_dict, dict_without_key
+import os.path
 
 
 class TaskConfig():
@@ -32,8 +33,10 @@ class TaskConfig():
 
     @staticmethod
     def load(filename):
-        env = Environment(loader=FileSystemLoader('.'))
-        template = env.get_template(filename)
+        template_dir = os.path.dirname(filename)
+        template_file = os.path.basename(filename)
+        env = Environment(loader=FileSystemLoader(template_dir))
+        template = env.get_template(template_file)
         yaml_str = template.render()
         conf = yaml.safe_load(yaml_str)
         global_conf = conf['global']
