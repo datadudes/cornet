@@ -1,5 +1,4 @@
-
-from cornet.dict_utils import merge_dict, dict_without_key
+from cornet.utils import merge_dict, dict_without_key, match_any
 
 
 def test_merge_dict_with_empty():
@@ -12,7 +11,7 @@ def test_merge_dict_with_empty():
 def test_merge_dict_recursively():
     d1 = {
         'a': 1,
-        'b': {1: 2,  3: 4, 5: {6: 7}},
+        'b': {1: 2, 3: 4, 5: {6: 7}},
         'c': {},
         'arr': [1, 2, 3]
     }
@@ -40,3 +39,9 @@ def test_without_key():
     assert dict_without_key(d, 1) == {4: 5}
     assert d == {1: {2: 3}, 4: 5}
     assert dict_without_key({1: 2}, 2) == {1: 2}
+
+
+def test_matches_any():
+    assert not match_any(['a', 'b', 'c'], 'aa')
+    assert match_any(['aa', 'c'], 'aa')
+    assert match_any(['aa.*', 'c'], 'aabb')

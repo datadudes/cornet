@@ -1,4 +1,4 @@
-from dict_utils import merge_dict
+from utils import merge_dict
 
 
 class SqoopCmd:

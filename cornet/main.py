@@ -3,16 +3,22 @@ import click
 from connectors import get_connector
 from task_config import TaskConfig
 from sqoop_cmd import SqoopCmd
+from utils import match_any
 
 
 def print_sqoop_cmds(task):
     with get_connector(task.source) as conn:
-        all_tables = conn.get_tables()
-        to_import = [t for t in all_tables if t.name not in task.skip_tables]
+        to_import = get_tables_to_import(conn, task)
         for table in sorted(to_import, key=lambda tbl: tbl.name):
             columns = conn.get_columns(table)
             cmd = SqoopCmd(task, table, columns)
             print cmd.as_string()
+
+
+def get_tables_to_import(conn, task):
+    all_tables = conn.get_tables()
+    is_skipped = lambda table: match_any(task.skip_tables, table.name)
+    return [t for t in all_tables if not is_skipped(t)]
 
 
 def print_schema(task):

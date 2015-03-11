@@ -1,5 +1,6 @@
 
 import copy
+import re
 
 
 def merge_dict(a, b):
@@ -31,3 +32,8 @@ def dict_without_key(dict, key):
     if key in d:
         del d[key]
     return d
+
+
+def match_any(patterns, string):
+    """ Return true if s matches any of the regexps"""
+    return any(re.match('^' + p + '$', string) for p in patterns)
