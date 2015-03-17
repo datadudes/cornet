@@ -3,11 +3,13 @@ from jinja2 import Environment, FileSystemLoader
 from utils import merge_dict, dict_without_key
 import os.path
 
+
 class TaskConfig():
 
     DEFAULT = {
         'source': {},
         'skip_tables': [],
+        'import_tables': [],
         'hive': {
             'db': '',
             'table_prefix': ''
@@ -20,7 +22,8 @@ class TaskConfig():
             dict_without_key(task_config, 'sqoop_args'),
             dict_without_key(global_config, 'sqoop_args')),
             TaskConfig.DEFAULT)
-        for key in ['source', 'hive', 'skip_tables', 'map_types']:
+        for key in ['source', 'hive', 'skip_tables',
+                    'map_types', 'import_tables']:
             setattr(self, key, merged[key])
         self._config = task_config
         self._global_config = global_config

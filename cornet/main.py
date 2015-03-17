@@ -1,4 +1,3 @@
-
 import click
 from connectors import get_connector
 from task_config import TaskConfig
@@ -17,8 +16,10 @@ def print_sqoop_cmds(task):
 
 def get_tables_to_import(conn, task):
     all_tables = conn.get_tables()
+    is_imported = lambda table: not task.import_tables or \
+        match_any(task.import_tables, table.name)
     is_skipped = lambda table: match_any(task.skip_tables, table.name)
-    return [t for t in all_tables if not is_skipped(t)]
+    return [t for t in all_tables if is_imported(t) and not is_skipped(t)]
 
 
 def print_schema(task):
