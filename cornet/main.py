@@ -24,8 +24,8 @@ def get_tables_to_import(conn, task):
 
 def print_schema(task):
     with get_connector(task.source) as conn:
-        tables_all = conn.get_tables()
-        for table in tables_all:
+        to_import = get_tables_to_import(conn, task)
+        for table in to_import:
             print '\n=== {0}.{1} ==='.format(task.source['db'], table[0])
             columns = conn.get_columns(table)
             for c in columns:
