@@ -50,8 +50,10 @@ class SqoopCmd:
     @staticmethod
     def _arg2str(k, v):
         prefix = '-' if len(k) == 1 else '--'
-        value = '' if isinstance(v, bool) else v
-        return '{0}{1} {2}'.format(prefix, k, value).strip()
+        if isinstance(v, bool):
+            return '{0}{1}'.format(prefix, k).strip()
+        else:
+            return "{0}{1} '{2}'".format(prefix, k, v).strip()
 
     def as_string(self):
         args = {

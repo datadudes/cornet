@@ -7,8 +7,8 @@ import pytest
 
 @pytest.mark.parametrize(("k", "v", "exp"), [
     ('delete-target-dir', True, '--delete-target-dir'),
-    ('m', 10, '-m 10'),
-    ('warehouse-dir', '/user/sqoop2', '--warehouse-dir /user/sqoop2'),
+    ('m', 10, '-m \'10\''),
+    ('warehouse-dir', '/user/sqoop2', '--warehouse-dir \'/user/sqoop2\''),
     ('f', True, '-f')])
 def test_args2str(k, v, exp):
     assert SqoopCmd._arg2str(k, v) == exp
