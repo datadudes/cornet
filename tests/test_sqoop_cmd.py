@@ -49,7 +49,7 @@ def test_arg_jdbc_url():
         'hive-table': 'raw_data.p_user',
         'map-column-hive': 'img=HiveType1',
         'map-column-java': 'id=JavaType2,img=JavaType1',
-        'password': 'hadoop-rocks',
+        'password': '\'hadoop-rocks\'',
         'table': 'user',
         'username': 'datadudes',
         'direct': True,

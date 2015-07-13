@@ -5,7 +5,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='cornet',
-    version='0.1.2',
+    version='0.1.3',
     author='Marcel Krcah, Daan Debie',
     author_email='marcel.krcah@gmail.com, debie.daan@gmail.com',
     description='Easily generate Apache Sqoop commands based on YAML config file',

@@ -40,7 +40,7 @@ class SqoopCmd:
         }
 
         if 'password' in self.task.source:
-            basic_args['password'] = self.task.source['password']
+            basic_args['password'] = "'" + self.task.source['password'] + "'"
         else:
             basic_args['password-file'] = self.task.source['password_file']
 
