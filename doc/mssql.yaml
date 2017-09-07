@@ -22,6 +22,7 @@ tasks:
       db: test
       user: WORKGROUP\Administrator
       password_file: /home/fms/.password
+      port: 1143
       driver: mssql
     hive:
       table_prefix: mssql_

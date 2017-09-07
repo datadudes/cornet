@@ -25,7 +25,7 @@ class MSSqlConnector(BaseConnector):
 
     def get_columns(self, table):
         sql = """
-            select column_name, upper(udt_name)
+            select column_name, upper(data_type)
             from information_schema.columns
             where table_catalog = '{0}'
             and table_name = '{1}'; """
