@@ -8,4 +8,5 @@ CREATE TABLE addresses (
     person INTEGER NOT NULL REFERENCES people(id),
     address TEXT NOT NULL
 );
+-- CREATE VIEW people_addresses AS
 COMMIT;

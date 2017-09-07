@@ -1,0 +1,27 @@
+global:
+  source:
+    host: 192.168.122.107
+  hive:
+    db: test
+  map_types:
+    java:
+      UUID: String
+    hive:
+      VARBINARY: String
+      LONGBLOB: String
+      UUID: String
+  sqoop_args:
+    m: 2
+    direct: true
+    data-warehouse: /user/sqoop
+  skip_tables:
+    - schema_version
+
+tasks:
+  - source:
+      db: test
+      user: WORKGROUP\Administrator
+      password_file: /home/fms/.password
+      driver: mssql
+    hive:
+      table_prefix: mssql_

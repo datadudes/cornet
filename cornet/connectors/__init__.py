@@ -12,5 +12,8 @@ def get_connector(source):
     elif driver == 'postgresql':
         from postgresql_connector import PostgreSqlConnector
         return PostgreSqlConnector(source)
+    elif driver == 'mssql':
+        from mssql_connector import MSSqlConnector
+        return MSSqlConnector(source)
     else:
         raise LookupError("Driver {0} not supported".format(driver))
