@@ -1,4 +1,5 @@
 import pymssql # yes I know, would be nice to use JDBC connector instead
+import sys
 from .base_connector import BaseConnector
 from cornet.connectors import Table, Column
 
@@ -6,6 +7,9 @@ from cornet.connectors import Table, Column
 class MSSqlConnector(BaseConnector):
 
     jdbc_url_prefix = 'jdbc:sqlserver'
+
+    if sys.version_info[0] < 3:
+        raise("Sorry, MSSQL isn't yet happy on Python 2.")
 
     def _get_db_conn(self):
         source = self.source
