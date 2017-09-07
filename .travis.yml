@@ -1,6 +1,6 @@
 language: python
 install:
-  - pip install tox==2.8.1
+  - pip install tox
   - pip install coveralls codecov
 script:
   - tox
@@ -10,4 +10,4 @@ after_success:
 env:
   - TOXENV=py27
   - TOXENV=py35
-  - TOXENV=py36
+  - TOXENV=py36-dev
