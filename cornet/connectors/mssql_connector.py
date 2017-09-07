@@ -1,5 +1,5 @@
 import pymssql # yes I know, would be nice to use JDBC connector instead
-from base_connector import BaseConnector
+from .base_connector import BaseConnector
 from cornet.connectors import Table, Column
 
 
@@ -21,7 +21,7 @@ class MSSqlConnector(BaseConnector):
             from information_schema.tables
             where table_name NOT IN ('sysdiagrams'); """
         res = self.query(sql)
-        return map(Table._make, res)
+        return list(map(Table._make, res))
 
     def get_columns(self, table):
         sql = """
@@ -30,4 +30,4 @@ class MSSqlConnector(BaseConnector):
             where table_catalog = '{0}'
             and table_name = '{1}'; """
         res = self.query(sql.format(self.source['db'], table.name))
-        return map(Column._make, res)
+        return list(map(Column._make, res))

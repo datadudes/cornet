@@ -12,10 +12,10 @@ def merge_dict(a, b):
     assert isinstance(b, dict), "Second arg not a dict, but {0} ".format(b)
 
     merged = {}
-    for key in set(a.keys() + b.keys()):
-        if key not in b.keys():
+    for key in set(list(a.keys()) + list(b.keys())):
+        if key not in list(b.keys()):
             merged[key] = a[key]
-        elif key not in a.keys():
+        elif key not in list(a.keys()):
             merged[key] = b[key]
         elif isinstance(a[key], dict) and isinstance(b[key], dict):
             merged[key] = merge_dict(a[key], b[key])

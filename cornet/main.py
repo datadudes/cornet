@@ -1,8 +1,8 @@
 import click
-from connectors import get_connector
-from task_config import TaskConfig
-from sqoop_cmd import SqoopCmd
-from utils import match_any
+from .connectors import get_connector
+from .task_config import TaskConfig
+from .sqoop_cmd import SqoopCmd
+from .utils import match_any
 
 
 def print_sqoop_cmds(task):
@@ -11,7 +11,7 @@ def print_sqoop_cmds(task):
         for table in sorted(to_import, key=lambda tbl: tbl.name):
             columns = conn.get_columns(table)
             cmd = SqoopCmd(task, table, columns)
-            print cmd.as_string()
+            print(cmd.as_string())
 
 
 def get_tables_to_import(conn, task):
@@ -26,10 +26,10 @@ def print_schema(task):
     with get_connector(task.source) as conn:
         to_import = get_tables_to_import(conn, task)
         for table in to_import:
-            print '\n=== {0}.{1} ==='.format(task.source['db'], table[0])
+            print('\n=== {0}.{1} ==='.format(task.source['db'], table[0]))
             columns = conn.get_columns(table)
             for c in columns:
-                print '{0}: {1}'.format(c.name, c.type)
+                print('{0}: {1}'.format(c.name, c.type))
 
 
 @click.command()

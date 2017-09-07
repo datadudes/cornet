@@ -1,4 +1,4 @@
-from utils import merge_dict
+from .utils import merge_dict
 
 
 class SqoopCmd:
@@ -56,7 +56,7 @@ class SqoopCmd:
     def as_string(self):
         args = {
             SqoopCmd._arg2str(k, v)
-            for k, v in self.args().iteritems()
+            for k, v in self.args().items()
             if v}
         name = 'sqoop import'
         return ' \\\n   '.join([name] + sorted(args)) + '\n'

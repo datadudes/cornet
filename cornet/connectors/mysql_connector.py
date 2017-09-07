@@ -1,5 +1,5 @@
 import MySQLdb
-from base_connector import BaseConnector
+from .base_connector import BaseConnector
 from cornet.connectors import Table, Column
 
 
@@ -18,7 +18,7 @@ class MySqlConnector(BaseConnector):
 
     def get_tables(self):
         res = self.query("show full tables")
-        return map(Table._make, res)
+        return list(map(Table._make, res))
 
     def get_columns(self, table):
         sql = """
@@ -27,4 +27,4 @@ class MySqlConnector(BaseConnector):
             where table_schema = '{0}'
             and table_name = '{1}' """
         res = self.query(sql.format(self.source['db'], table.name))
-        return map(Column._make, res)
+        return list(map(Column._make, res))

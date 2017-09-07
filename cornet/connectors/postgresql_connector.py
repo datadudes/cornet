@@ -1,5 +1,5 @@
 import psycopg2
-from base_connector import BaseConnector
+from .base_connector import BaseConnector
 from cornet.connectors import Table, Column
 
 
@@ -22,7 +22,7 @@ class PostgreSqlConnector(BaseConnector):
             from information_schema.tables
             where table_schema NOT IN ('pg_catalog', 'information_schema'); """
         res = self.query(sql)
-        return map(Table._make, res)
+        return list(map(Table._make, res))
 
     def get_columns(self, table):
         sql = """
@@ -31,4 +31,4 @@ class PostgreSqlConnector(BaseConnector):
             where table_catalog = '{0}'
             and table_name = '{1}'; """
         res = self.query(sql.format(self.source['db'], table.name))
-        return map(Column._make, res)
+        return list(map(Column._make, res))
