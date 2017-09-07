@@ -1,6 +1,6 @@
 language: python
 install:
-  - pip install tox==1.8.1
+  - pip install tox==2.8.1
   - pip install coveralls codecov
 script:
   - tox
