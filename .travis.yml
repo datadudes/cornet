@@ -9,3 +9,5 @@ after_success:
   codecov
 env:
   - TOXENV=py27
+  - TOXENV=py35
+  - TOXENV=py36
