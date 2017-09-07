@@ -1,4 +1,4 @@
-import pymssql # yes I know, would be nice to use JDBC connector instead
+import pymssql      # yes I know, would be nice to use JDBC connector instead
 import sys
 from .base_connector import BaseConnector
 from cornet.connectors import Table, Column
