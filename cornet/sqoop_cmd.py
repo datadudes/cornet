@@ -15,11 +15,15 @@ class SqoopCmd:
             self.task.source['port'],
             self.task.source['db'])
 
+    def _arg_jvmargs(self):
+        return ["-D{0}={1}".format(k,v) for k,v in self.task.jvmargs.iteritems()]
+
     def _arg_hive_tablename(self):
         return '{0}.{1}{2}'.format(
             self.task.hive['db'],
             self.task.hive['table_prefix'],
             self.table.name)
+
 
     def _arg_column_map(self, layer):
         type_mapping = self.task.map_types.get(layer, {})
@@ -58,5 +62,8 @@ class SqoopCmd:
             SqoopCmd._arg2str(k, v)
             for k, v in self.args().iteritems()
             if v}
-        name = 'sqoop import'
-        return ' \\\n   '.join([name] + sorted(args)) + '\n'
+        
+        prefix = self.task.script['prefix']
+        postfix = self.task.script['postfix']
+        jvmArgs = self._arg_jvmargs()
+        return ' \\\n   '.join([prefix] + jvmArgs + sorted(args) + [postfix]) + '\n'
