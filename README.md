@@ -147,6 +147,41 @@ For example, you can ingest databases with a similar name using the [for-cycle](
 
 To make the YAML config file even more DRY, checkout the Jinja2 [variables](http://jinja.pocoo.org/docs/dev/templates/#assignments) and [blocks](http://jinja.pocoo.org/docs/dev/templates/#assignments) and [many other features](http://jinja.pocoo.org/docs/dev/templates/#) that Jinja2 provides.
 
+### wrap the output commands
+
+You can set prefix and postfix values that would wrap the command and its arguments. By default the prefix will be `sqoop import` and the postfix empty
+
+The following (bash) example will retry the sqoop import if it returns a non-zero exitcode 
+
+```
+global:
+  script:
+    prefix: "n=0\nuntil [ $n -ge 5 ]\ndo \n  "
+    postfix: " \n  && break\n  n=$[$n+1]\n  sleep 15\ndone"
+```
+
+### Add Jvm arguments to sqoop
+
+Adding a jvmargs section allows you to specify jvm arguments for sqoop
+
+for instance
+
+```
+global:
+  jvmargs:
+    user.timezone: CET
+    map.retry.exponentialBackOff: TRUE
+    map.retry.numRetries: 10
+```
+
+will result in
+
+```
+sqoop -Duser.timezone=CET -Dmap.retry.exponentialBackOff=TRUE -Dmap.retry.numRetries=10 import
+```
+
+note that for sqoop the -D needs to be the first arguments for them to work
+ 
 ### Explanatory syntax errors
 
 We have tried out best to provide good explanatory messages if there is something missing or not quite right in the config file.

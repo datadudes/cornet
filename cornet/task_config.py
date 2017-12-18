@@ -7,7 +7,7 @@ import os.path
 class TaskConfig():
 
     DEFAULT = {
-        'script': {'prefix':'sqoop import ', 'postfix':' # go go gadgetcopter'},
+        'script': {'prefix': '', 'postfix': ''},
         'source': {},
         'jvmargs': {},
         'skip_tables': [],
