@@ -156,8 +156,16 @@ The following (bash) example will retry the sqoop import if it returns a non-zer
 ```
 global:
   script:
-    prefix: "n=0\nuntil [ $n -ge 5 ]\ndo \n  "
-    postfix: " \n  && break\n  n=$[$n+1]\n  sleep 15\ndone"
+    prefix: |
+      n=0
+      until [ $n -ge 5 ]
+      do
+    postfix: |
+      \
+      && break
+      n=$[$n+1]  
+      sleep 15
+      done
 ```
 
 ### Add Jvm arguments to sqoop

@@ -68,4 +68,4 @@ class SqoopCmd:
                            self._arg_jvmargs() +
                            ['import']) + ' \\\n   '
         postfix = self.task.script['postfix']
-        return prefix + command + ' \\\n   '.join(sorted(args)) + postfix + '\n'
+        return prefix + command + ' \\\n   '.join(sorted(args)) + ' ' + postfix + '\n'
