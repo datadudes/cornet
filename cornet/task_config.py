@@ -7,7 +7,9 @@ import os.path
 class TaskConfig():
 
     DEFAULT = {
+        'script': {'prefix': '', 'postfix': ''},
         'source': {},
+        'jvmargs': {},
         'skip_tables': [],
         'import_tables': [],
         'hive': {
@@ -22,7 +24,7 @@ class TaskConfig():
             dict_without_key(task_config, 'sqoop_args'),
             dict_without_key(global_config, 'sqoop_args')),
             TaskConfig.DEFAULT)
-        for key in ['source', 'hive', 'skip_tables',
+        for key in ['script', 'source', 'jvmargs', 'hive', 'skip_tables',
                     'map_types', 'import_tables']:
             setattr(self, key, merged[key])
         self._config = task_config
