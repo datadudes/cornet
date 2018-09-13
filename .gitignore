@@ -136,3 +136,4 @@ crashlytics.properties
 crashlytics-build.properties
 
 .python-version
+.pytest_cache
