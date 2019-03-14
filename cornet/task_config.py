@@ -1,6 +1,6 @@
 import yaml
 from jinja2 import Environment, FileSystemLoader
-from utils import merge_dict, dict_without_key
+from .utils import merge_dict, dict_without_key
 import os.path
 
 

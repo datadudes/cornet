@@ -1,0 +1,19 @@
+digraph cornet {
+   pg [label="PostgreSQL"];
+   my [label="MySQL"];
+   co [label="Cornet"];
+   sq [label="Sqoop"];
+   h  [label="Hadoop"];
+   ms [label="SQL Server"; color=gray;];
+
+   // to be added
+   ms->co [style=dotted; color=forestgreen;];
+
+   // schema flows
+   pg->co [color=forestgreen;];
+   my->co [color=forestgreen;];
+   co -> sq [label="Commands"; fontcolor=slategray; color=slategray;];
+   ms -> sq;
+   my -> sq;
+   pg -> sq -> h;
+}

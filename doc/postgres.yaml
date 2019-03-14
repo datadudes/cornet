@@ -1,0 +1,28 @@
+global:
+  source:
+    host: localhost
+  hive:
+    db: fms
+  map_types:
+    java:
+      UUID: String
+    hive:
+      VARBINARY: String
+      LONGBLOB: String
+      UUID: String
+  sqoop_args:
+    m: 2
+    direct: true
+    data-warehouse: /user/sqoop
+  skip_tables:
+    - schema_version
+
+tasks:
+  - source:
+      db: fms
+      port: 5432
+      user: fms
+      password_file: /home/fms/.password
+      driver: postgresql
+    hive:
+      table_prefix: b_
