@@ -18,8 +18,8 @@ setup(
         'console_scripts': ['cornet=cornet.main:cli']
     },
     extras_require={
-        'mysql': ['mysqlclient==1.3.5'],
-        'postgres': ['psycopg2==2.6'],
+        'mysql': ['mysqlclient==1.4.2'],
+        'postgres': ['psycopg2==2.7.7'],
     },
     install_requires=requirements,
     classifiers=[
