@@ -111,7 +111,7 @@ If you don't need to import all tables from a database, use the `skip_tables` se
     - log
 ```
 
-The tables are are actually regular expressions. For instance, you can simply exclude all tables starting a prefix `QUARTZ_` as follows:
+The tables are actually regular expressions. For instance, you can simply exclude all tables starting a prefix `QUARTZ_` as follows:
 
 ```
   skip_tables:
